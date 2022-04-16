@@ -9,9 +9,10 @@ def starting_up():
     proc = subprocess.Popen(['roslaunch', 'turtlebot3_gazebo', 
     'turtlebot3_stage_1.launch'], stdout=subprocess.DEVNULL, stderr= subprocess.DEVNULL)
 
+    # print('not blocking')
 
-    if check_turtlebot():
-        return 'TurtleBot sucessfully run!'
+    if proc.returncode is None:
+         return 'TurtleBot sucessfully run!'
         
     return 'TurtleBot run unsucessfull!'
 
