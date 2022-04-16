@@ -11,9 +11,9 @@ def starting_up():
 
     # print('not blocking')
 
-    if proc.returncode is None:
-         return 'TurtleBot sucessfully run!'
-        
+    if check_turtlebot():
+        return 'TurtleBot sucessfully run!'
+
     return 'TurtleBot run unsucessfull!'
 
 app.run(debug= True)
