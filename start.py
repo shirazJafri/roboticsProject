@@ -17,4 +17,7 @@ def starting_up():
         
     return 'TurtleBot run unsucessfull!'
 
+@app.route('/move')
+def move_bot():
+    return "Moving bot"
 app.run(debug= True)
