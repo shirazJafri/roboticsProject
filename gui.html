@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
-
+  <body>
+    <h1>Simple ROS User Interface</h1>
+    <p>Connection status: <span id="status"></span></p>
+    <p>Last /txt_msg received: <span id="msg"></span></p>
+    <div id="zone_joystick" style="position: relative;"></div>
+    <div><img id="my_image" style='height: 50%; width: 50%; object-fit: fill' src="assets/img/placeholder.png"></div>
+    <div><img id="my_image_frontal" style='height: 50%; width: 50%; object-fit: fill' src="assets/img/pr.png"></div>
+    <h1>Reward received: <span id="rew"></span></h1>
+  </body>
 <head>
   <meta charset="utf-8" />
 
@@ -25,6 +33,26 @@
     ros.on('close', function () {
       console.log('Connection to websocket server closed.');
     });
+
+
+  // --------------------------------------------- //
+  // --------------P/N Functionality START---------------//
+  let rewardRendered = document.getElementById('rew');
+  var reward = 0;
+
+  document.addEventListener('keydown', function(e) {
+    switch(e.keyCode) {
+        case 80: //'p' is pressed
+          reward = reward + 100;
+          break;
+        case 78: //'n' is pressed
+          reward = reward - 100;
+          break;
+    }
+    rewardRendered.innerHTML = reward;
+  })
+  // --------------------------------------------- //
+  // --------------P/N Functionality END---------------//
 
     cmd_vel_listener = new ROSLIB.Topic({
       ros: ros,
@@ -52,16 +80,16 @@
     document.addEventListener('keydown', function (e) {
       switch (e.keyCode) {
         case 37:
-          move(0, 1.82)
+          move(0, 1.0)
           break;
         case 38:
-          move(0.26, 0)
+          move(1.0, 0)
           break;
         case 39:
-          move(0, -1.82)
+          move(0, -1.0)
           break;
         case 40:
-          move(-0.26, 0)
+          move(-1.0, 0)
           break;
       }
     });
@@ -127,16 +155,9 @@
     image_topic_frontal.subscribe(function(message){
       document.getElementById('my_image_frontal').src = "data:image/jpg;base64,"+message.data;
     })
+
+
   </script>
 </head>
-
-<body>
-  <h1>Simple ROS User Interface</h1>
-  <p>Connection status: <span id="status"></span></p>
-  <p>Last /txt_msg received: <span id="msg"></span></p>
-  <div id="zone_joystick" style="position: relative;"></div>
-  <div><img id="my_image" style='height: 50%; width: 50%; object-fit: fill' src="assets/img/placeholder.png"></div>
-  <div><img id="my_image_frontal" style='height: 50%; width: 50%; object-fit: fill' src="assets/img/pr.png"></div>
-</body>
 
 </html>
