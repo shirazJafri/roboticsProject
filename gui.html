@@ -1,6 +1,59 @@
 <!DOCTYPE html>
 <html>
-
+  <body>
+    <h1>Simple ROS User Interface</h1>
+    <p>Connection status: <span id="status"></span></p>
+    <p>Last /txt_msg received: <span id="msg"></span></p>
+    <h1>Reward received: <span id="rew"></span></h1>
+   
+    <img id="my_image"
+      style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px;'
+      src="assets/img/placeholder2.jpg">
+    <img id="my_image_frontal"
+    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px;'
+    src="assets/img/pr.png">
+    <div>
+      <div style=" display: inline-flexbox;">
+        <div style="text-align: center; margin-top: 50px;">Linear Speed</div>
+        <div class=" slidecontainer" style="text-align: center; ">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
+        <div style="text-align: center; margin-top: 25px; ">Angular Speed</div>
+  
+        <div class=" slidecontainer" style="text-align: center;">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
+        <div style="text-align: center; margin-top: 25px;">
+          <button class="stopButton">Stop All & Reset</button>
+        </div>
+      </div>
+  
+      <div id="zone_joystick" style="position: relative; left: 20%;"></div>
+      <div>
+        <div class="keys" style=" margin-top: 25px;">
+          <div class="up arr"><i class="fa fa-arrow-up"></i></div>
+          <br />
+          <div class="left arr"><i class="fa fa-arrow-left"></i></div>
+          <div class="down arr"><i class="fa fa-arrow-down"></i></div>
+          <div class="right arr"><i class="fa fa-arrow-right"></i></div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="names">
+          <div class="uptext"></div>
+          <div class="downtext"></div>
+          <div class="lefttext"></div>
+          <div class="righttext"></div>
+          <div class="b"></div>
+          <div class="a"></div>
+        </div>
+  
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+      </div>
+    </div>
+  </body>
 <head>
   <meta charset="utf-8" />
   <style>
@@ -266,58 +319,7 @@
   </script>
 </head>
 
-<body>
-  <h1>Simple ROS User Interface</h1>
-  <p>Connection status: <span id="status"></span></p>
-  <p>Last /txt_msg received: <span id="msg"></span></p>
-  <h1>Reward received: <span id="rew"></span></h1>
-  <img id="my_image"
-    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px;'
-    src="assets/img/placeholder2.jpg">
 
-
-  <div>
-    <div style=" display: inline-flexbox;">
-      <div style="text-align: center; margin-top: 50px;">Linear Speed</div>
-      <div class=" slidecontainer" style="text-align: center; ">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-      </div>
-      <div style="text-align: center; margin-top: 25px; ">Angular Speed</div>
-
-      <div class=" slidecontainer" style="text-align: center;">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-      </div>
-      <div style="text-align: center; margin-top: 25px;">
-        <button class="stopButton">Stop All & Reset</button>
-      </div>
-    </div>
-
-    <div id="zone_joystick" style="position: relative; left: 20%;"></div>
-    <div>
-      <div class="keys" style=" margin-top: 25px;">
-        <div class="up arr"><i class="fa fa-arrow-up"></i></div>
-        <br />
-        <div class="left arr"><i class="fa fa-arrow-left"></i></div>
-        <div class="down arr"><i class="fa fa-arrow-down"></i></div>
-        <div class="right arr"><i class="fa fa-arrow-right"></i></div>
-      </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <div class="names">
-        <div class="uptext"></div>
-        <div class="downtext"></div>
-        <div class="lefttext"></div>
-        <div class="righttext"></div>
-        <div class="b"></div>
-        <div class="a"></div>
-      </div>
-
-      <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    </div>
-  </div>
-</body>
 
 
 </html>
