@@ -3,31 +3,30 @@
 
   <body>
     <h1>Simple ROS User Interface</h1>
-    <p>Connection status: <span id="status"></span></p>
-    <p>Last /txt_msg received: <span id="msg"></span></p>
-    <label class="switch">
+  <label class="switch">
       <input type="checkbox" onclick="toggleViews()">
       <span class="slider"></span>
     </label>
+    <p>Connection status: <span id="status" style="color:red;font-style: oblique;"></span></p>   
     <h1>Reward received: <span id="rew"></span></h1>
-    <div id="my_image">
     <img id="my_image"
       style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px;'
       src="assets/img/placeholder2.jpg">
-    </div>
-    <div id="my_image_frontal", style="display: none;">
     <img id="my_image_frontal"
-    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px; '
+    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px; display: none;'
     src="assets/img/pr.png">
-    </div>
       <div id="zone_joystick" style="position: relative; left: 20%; padding-top: 1in;"></div>
       <div>
         <div class="keys">
-          <div class="up arr"><i class="fa fa-arrow-up"></i></div>
+          <div class="up arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="upFunction()">Up</button></div>
           <br />
-          <div class="left arr"><i class="fa fa-arrow-left"></i></div>
-          <div class="down arr"><i class="fa fa-arrow-down"></i></div>
-          <div class="right arr"><i class="fa fa-arrow-right"></i></div>
+          <div class="left arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="leftFunction()">Left</button></div>
+          <div class="down arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="downFunction()">Down</button></i></div>
+          <div class="right arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="rightFunction()">Right</button></div>
         </div>
         <br />
         <br />
@@ -194,15 +193,6 @@
     -ms-transform: translateX(26px);
     transform: translateX(26px);
   }
-
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-
-  .slider.round:before {
-    border-radius: 50%;
-  }
   </style>
   <script type="text/javascript"
     src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
@@ -210,17 +200,22 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.7.3/nipplejs.js"></script>
   <script type="text/javascript" type="text/javascript">
     // Connecting to ROS
+    var response;
     var ros = new ROSLIB.Ros({
       url: 'ws://localhost:9090'
     });
     ros.on('connection', function () {
       console.log('Connected to websocket server.');
+      document.getElementById("status").innerHTML = "Connected to websocket server."
     });
     ros.on('error', function (error) {
       console.log('Error connecting to websocket server: ', error);
+      document.getElementById("status").innerHTML = "Error connecting to websocket server: " + error;
     });
     ros.on('close', function () {
       console.log('Connection to websocket server closed.');
+      document.getElementById("status").innerHTML = "Connection to websocket server closed.";
+
     });
     // --------------------------------------------- //
     // --------------P/N Functionality START---------------//
@@ -262,16 +257,16 @@
     // Arrow Keys Functionality
     document.addEventListener('keydown', function (e) {
       switch (e.keyCode) {
-        case 37:
+        case 65:
           move(0, 1.0)
           break;
-        case 38:
+        case 87:
           move(1.0, 0)
           break;
-        case 39:
+        case 68:
           move(0, -1.0)
           break;
-        case 40:
+        case 83:
           move(-1.0, 0)
           break;
       }
@@ -336,5 +331,18 @@
       mainFrameTwo.style.display = (
         mainFrameTwo.style.display == "none" ? "block" : "none"); 
    }
+   function upFunction(){
+    move(1.0, 0)
+   }
+   function leftFunction(){
+    move(0, 1.0)
+
+  }
+  function rightFunction(){
+    move(0, -1.0)
+  }
+ function downFunction(){
+  move(-1.0, 0)
+} 
   </script>
 </head>
