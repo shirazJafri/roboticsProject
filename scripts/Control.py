@@ -147,6 +147,7 @@ def robotSetRandomPos(setPosPub):
     return ( x , y , theta )
 
 # Perform an action
+from time import sleep
 def robotDoAction(velPub, action):
     status = 'robotDoAction => OK'
     if action == 0:

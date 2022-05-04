@@ -5,10 +5,14 @@ from time import time
 from time import sleep
 from datetime import datetime
 import matplotlib.pyplot as plt
+import httplib2
+from urlparse import urlparse
+from json import dumps
+h = httplib2.Http(".cache")
 
 import sys
-DATA_PATH = '/home/maestro/catkin_ws/src/master_rad/Data'
-MODULES_PATH = '/home/maestro/catkin_ws/src/master_rad/scripts'
+DATA_PATH = '/home/hamza/catkin_ws/src/autonomous-driving-turtlebot-with-reinforcement-learning/Data'
+MODULES_PATH = '/home/hamza/catkin_ws/src/autonomous-driving-turtlebot-with-reinforcement-learning/scripts/'
 sys.path.insert(0, MODULES_PATH)
 
 from Qlearning import *
@@ -18,7 +22,7 @@ from Control import *
 # Episode parameters
 MAX_EPISODES = 400
 MAX_STEPS_PER_EPISODE = 500
-MIN_TIME_BETWEEN_ACTIONS = 0.0
+MIN_TIME_BETWEEN_ACTIONS = 1.0
 
 # Learning parameters
 ALPHA = 0.5
@@ -342,6 +346,26 @@ if __name__ == '__main__':
 
                             ( reward, terminal_state ) = getReward(action, prev_action, lidar, prev_lidar, crash)
 
+                            ## my code
+                            robotStop(velPub)
+                            print("robot action: ", action)
+                            content = "-1"
+                            while content == "-1":
+                                resp, content = h.request("http://localhost:5000/", "GET")
+                                sleep(2)
+                            print("Content", content)
+                            
+                            text = content
+                            if text == 'p':
+                                reward = reward + 1
+                            elif text == 'n':
+                                reward = reward - 1
+                            print('reward recieved:',reward)
+                            # data = {"reward":str(reward)}
+                            # resp, content = h.request("http://localhost:5000/get", "POST", headers={'Content-Type': 'application/json; charset=UTF-8'},
+                            #                             body=dumps(data))
+                            # print("Resp",resp)
+                            t_step = rospy.Time.now()
                             ( Q_table, status_uqt ) = updateQTable(Q_table, prev_state_ind, action, reward, state_ind, alpha, gamma)
 
                             if EXPLORATION_FUNCTION == 1:
