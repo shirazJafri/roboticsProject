@@ -1,92 +1,382 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
 
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-</head>
 <body>
+  <h1>Simple ROS User Interface</h1>
+  <label class="switch">
+    <input type="checkbox" onclick="toggleViews()">
+    <span class="slider"></span>
+  </label>
+  <p>Connection status: <span id="status" style="color:red;font-style: oblique;"></span></p>
+  <h1>Previous Action: <span id="rew"></span></h1>
+  <img id="my_image"
+    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px;'
+    src="assets/img/placeholder2.jpg">
+  <img id="my_image_frontal"
+    style='height: 50%; width: 50%; display: block; margin-left: auto; margin-right: auto; margin-top: 50px; display: none;'
+    src="assets/img/pr.png">
+  <div id="zone_joystick" style="position: relative; left: 20%; padding-top: 1in;"></div>
+  <div>
+    <div class="keys">
+      <div class="up arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="upFunction()">Up</button></div>
+      <br />
+      <div class="left arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="leftFunction()">Left</button></div>
+      <div class="down arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="downFunction()">Down</button></i></div>
+      <div class="right arr"><button style="background:transparent;  border:none;
+            outline:none; width:100px; height:90px;" onclick="rightFunction()">Right</button></div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="names">
+      <div class="uptext"></div>
+      <div class="downtext"></div>
+      <div class="lefttext"></div>
+      <div class="righttext"></div>
+      <div class="b"></div>
+      <div class="a"></div>
+    </div>
 
-<h2>Toggle Switch</h2>
-
-<label class="switch">
-  <input type="checkbox">
-  <span class="slider"></span>
-</label>
-
-<label class="switch">
-  <input type="checkbox" checked>
-  <span class="slider"></span>
-</label><br><br>
-
-<label class="switch">
-  <input type="checkbox">
-  <span class="slider round"></span>
-</label>
-
-<label class="switch">
-  <input type="checkbox" checked>
-  <span class="slider round"></span>
-</label>
-
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  </div>
+  </div>
 </body>
-</html> 
+
+<head>
+  <meta charset="utf-8" />
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Lato:300);
+
+    .container {
+      height: 200px;
+      position: relative;
+      border: 3px solid green;
+    }
+
+    .vertical-center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+    .stopButton {
+      padding: 15px 25px;
+      font-size: 24px;
+      text-align: center;
+      cursor: pointer;
+      outline: none;
+      color: #fff;
+      background-color: #04AA6D;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+    }
+
+    .stopButton:hover {
+      background-color: #3e8e41
+    }
+
+    .stopButton:active {
+      background-color: #3e8e41;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+
+    @import url(https://fonts.googleapis.com/css?family=Lato:300);
+
+    html {
+      background: white;
+      height: 100%;
+    }
+
+    .keys {
+      font-family: "Lato", sans-serif;
+      text-align: center;
+      width: 500px;
+      height: 200px;
+      margin: auto;
+    }
+
+    .arr {
+      cursor: pointer;
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      background: grey;
+      color: white;
+      font-size: 50px;
+      border-right: 10px solid #4d4d4d;
+      border-bottom: 10px solid #4d4d4d;
+      border-left: 10px solid #5a5a5a;
+      border-top: 10px solid #676767;
+      display: inline-block;
+      margin: 5px;
+      transition: all 0.05s linear;
+      user-select: none;
+    }
+
+    .arr:active {
+      border-bottom: 8px solid #4d4d4d;
+      text-shadow: 0 0 10px white, 0 0 10px white, 0 0 20px white;
+      transform: translate(0, 2px);
+    }
+
+    .up {
+      position: relative;
+      top: -4px;
+    }
+
+    .pressed {
+      border-bottom: 8px solid #4d4d4d;
+      text-shadow: 0 0 10px white;
+      transform: translate(0, 2px);
+    }
+
+    .names {
+      font-size: 18px;
+      font-family: "Lato", sans-serif;
+      text-align: center;
+      color: white;
+      text-shadow: 0 0 10px white, 0 0 10px white, 0 0 10px white, 0 0 10px white;
+    }
+
+    .b {
+      color: blue;
+      text-shadow: 0 0 10px blue, 0 0 10px blue, 0 0 10px blue, 0 0 10px blue;
+      font-size: 100px;
+      font-family: serif;
+    }
+
+    .a {
+      color: yellow;
+      text-shadow: 0 0 10px yellow, 0 0 10px yellow, 0 0 10px yellow, 0 0 10px yellow;
+      font-size: 100px;
+      font-family: serif;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+  </style>
+  <script type="text/javascript"
+    src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.7.3/nipplejs.js"></script>
+  <script type="text/javascript" type="text/javascript">
+    // Connecting to ROS
+    var response;
+    var ros = new ROSLIB.Ros({
+      url: 'ws://localhost:9090'
+    });
+    ros.on('connection', function () {
+      console.log('Connected to websocket server.');
+      document.getElementById("status").innerHTML = "Connected to websocket server."
+    });
+    ros.on('error', function (error) {
+      console.log('Error connecting to websocket server: ', error);
+      document.getElementById("status").innerHTML = "Error connecting to websocket server: " + error;
+    });
+    ros.on('close', function () {
+      console.log('Connection to websocket server closed.');
+      document.getElementById("status").innerHTML = "Connection to websocket server closed.";
+
+    });
+    // --------------------------------------------- //
+    // --------------P/N Functionality START---------------//
+    let rewardRendered = document.getElementById('rew');
+
+    document.addEventListener('keydown', function (e) {
+      switch (e.keyCode) {
+        case 80: //'p' is pressed
+          // Create request object
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", 'http://localhost:5000/', true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          xhr.send("p");
+          break;
+        case 78: //'n' is pressed
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", 'http://localhost:5000/', true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          xhr.send("n");
+          break;
+      }
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // Typical action to be performed when the document is ready:
+          document.getElementById("rew").innerHTML = xhttp.responseText;
+        }
+      };
+      xhttp.open("GET", "http://localhost:5000/get", true);
+      xhttp.send();
+      console.log(xhttp.responseText);
+    })
+    // --------------------------------------------- //
+    // --------------P/N Functionality END---------------//
+    cmd_vel_listener = new ROSLIB.Topic({
+      ros: ros,
+      name: "/cmd_vel",
+      messageType: 'geometry_msgs/Twist'
+    });
+    move = function (linear, angular) {
+      var twist = new ROSLIB.Message({
+        linear: {
+          x: linear,
+          y: 0,
+          z: 0
+        },
+        angular: {
+          x: 0,
+          y: 0,
+          z: angular
+        }
+      });
+      cmd_vel_listener.publish(twist);
+    }
+    // Arrow Keys Functionality
+    document.addEventListener('keydown', function (e) {
+      switch (e.keyCode) {
+        case 65:
+          move(0, 1.0)
+          break;
+        case 87:
+          move(1.0, 0)
+          break;
+        case 68:
+          move(0, -1.0)
+          break;
+        case 83:
+          move(-1.0, 0)
+          break;
+      }
+    });
+    createJoystick = function () {
+      var options = {
+        zone: document.getElementById('zone_joystick'),
+        threshold: 0.1,
+        position: { left: 50 + '%' },
+        mode: 'static',
+        size: 150,
+        color: '#000000',
+      };
+      manager = nipplejs.create(options);
+      linear_speed = 0;
+      angular_speed = 0;
+      self.manager.on('start', function (event, nipple) {
+        timer = setInterval(function () {
+          move(linear_speed, angular_speed);
+        }, 25);
+      });
+      self.manager.on('end', function () {
+        if (timer) {
+          clearInterval(timer);
+        }
+        self.move(0, 0);
+      });
+      manager.on('move', function (event, nipple) {
+        max_linear = 5.0; // m/s
+        max_angular = 2.0; // rad/s
+        max_distance = 75.0; // pixels;
+        linear_speed = Math.sin(nipple.angle.radian) * max_linear * nipple.distance / max_distance;
+        angular_speed = -Math.cos(nipple.angle.radian) * max_angular * nipple.distance / max_distance;
+      });
+      self.manager.on('end', function () {
+        console.log("Movement end");
+      });
+    }
+    window.onload = function () {
+      createJoystick();
+    }
+    var image_topic = new ROSLIB.Topic({
+      ros: ros, name: '/camera/image/compressed',
+      messageType: 'sensor_msgs/CompressedImage'
+    });
+    image_topic.subscribe(function (message) {
+      document.getElementById('my_image').src = "data:image/jpg;base64," + message.data;
+      //image_topic.unsubscribe();
+    });
+    var image_topic_frontal = new ROSLIB.Topic({
+      ros: ros, name: '/camera/rgb/image_raw/compressed',
+      messageType: 'sensor_msgs/CompressedImage'
+    });
+    image_topic_frontal.subscribe(function (message) {
+      document.getElementById('my_image_frontal').src = "data:image/jpg;base64," + message.data;
+    })
+    function toggleViews() {
+      var mainFrameOne = document.getElementById("my_image");
+      var mainFrameTwo = document.getElementById("my_image_frontal");
+      mainFrameOne.style.display = (
+        mainFrameOne.style.display == "none" ? "block" : "none");
+      mainFrameTwo.style.display = (
+        mainFrameTwo.style.display == "none" ? "block" : "none");
+    }
+    function upFunction() {
+      move(1.0, 0)
+    }
+    function leftFunction() {
+      move(0, 1.0)
+
+    }
+    function rightFunction() {
+      move(0, -1.0)
+    }
+    function downFunction() {
+      move(-1.0, 0)
+    } 
+  </script>
+</head>
