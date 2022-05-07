@@ -8,11 +8,12 @@ import matplotlib.pyplot as plt
 import httplib2
 from urlparse import urlparse
 from json import dumps
+import requests
 h = httplib2.Http(".cache")
 
 import sys
-DATA_PATH = '/home/hamza/catkin_ws/src/autonomous-driving-turtlebot-with-reinforcement-learning/Data'
-MODULES_PATH = '/home/hamza/catkin_ws/src/autonomous-driving-turtlebot-with-reinforcement-learning/scripts/'
+DATA_PATH = '../Data'
+MODULES_PATH = '/scripts'
 sys.path.insert(0, MODULES_PATH)
 
 from Qlearning import *
@@ -349,6 +350,9 @@ if __name__ == '__main__':
                             ## my code
                             robotStop(velPub)
                             print("robot action: ", action)
+                            action_posted = {'action': action}
+                            r = requests.post('http://localhost:5000/get', action_posted)
+                            print(r.text)
                             content = "-1"
                             while content == "-1":
                                 resp, content = h.request("http://localhost:5000/", "GET")
@@ -361,10 +365,7 @@ if __name__ == '__main__':
                             elif text == 'n':
                                 reward = reward - 1
                             print('reward recieved:',reward)
-                            # data = {"reward":str(reward)}
-                            # resp, content = h.request("http://localhost:5000/get", "POST", headers={'Content-Type': 'application/json; charset=UTF-8'},
-                            #                             body=dumps(data))
-                            # print("Resp",resp)
+
                             t_step = rospy.Time.now()
                             ( Q_table, status_uqt ) = updateQTable(Q_table, prev_state_ind, action, reward, state_ind, alpha, gamma)
 
@@ -390,6 +391,8 @@ if __name__ == '__main__':
                             prev_lidar = lidar
                             prev_action = action
                             prev_state_ind = state_ind
+
+                            
 
     except rospy.ROSInterruptException:
         robotStop(velPub)
